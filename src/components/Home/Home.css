@@ -1,0 +1,121 @@
+
+  .Home {
+    max-width: 70rem;
+    margin: 20vh auto;
+    text-align: center;
+  }
+  
+  
+  .mink-view {
+    position: relative;
+    background-color: #fff;
+    /* margin: 0 auto; */
+    padding: 50px;
+    border-radius: 1.2rem;
+    box-shadow: -8px -8px #000;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+  
+  .mink-view .button {
+    border-radius: 28px;
+    width: 65%;
+    margin: 0 auto;
+  }
+
+  .auth-element {
+    position: absolute;
+    top: -4.8rem;
+    right: -26rem;
+    background-color: #fff;
+    font-size: 1.8rem;
+    border-radius: 1.2rem;
+    padding: 1.8rem;
+    box-shadow: -5px 5px rgb(250, 0, 0);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .auth-element.base {
+    right: -18rem;
+  }
+  .auth-element:hover {
+    box-shadow: -8px 8px rgb(250, 0, 0);
+    transform: translateY(10px);
+  }
+
+  .auth-element.inverse {
+    box-shadow: -5px 5px rgb(21, 250, 0);
+  }
+  .auth-element.inverse:hover {
+    box-shadow: -8px 8px rgb(21, 250, 0);
+    /* transform: translateY(10px); */
+  }
+
+  .auth-element.info {
+    top: 5.6rem;
+    box-shadow: -5px 5px rgb(250, 183, 0);
+  }
+  .auth-element.info:hover {
+    top: 5.6rem;
+    box-shadow: -8px 8px rgb(250, 183, 0);
+  }
+
+
+  
+  .row {
+    display: flex;
+  }
+  .mink-view .disabled-input {
+    width: 40%;
+    background-color: rgb(180, 180, 180);
+    text-align: center;
+    font-family: inherit;
+    padding: 1.2rem;
+    font-size: 1.4rem;
+    outline: none;
+    border-radius: 6px 0 0 6px;
+    font-weight: 300;
+  }
+  .mink-view .row:nth-child(3) input {
+    width: 100%;
+    border-radius: 0 6px 6px 0;
+  }
+  
+  
+  
+  .mink-gen {
+    margin-top: 4rem;
+    padding: 3rem;
+    font-size: 1.2rem;
+    background-color: #fff;
+    border-radius: 1.2rem;
+    box-shadow: -8px 8px #000;
+  }
+  
+  .mink-gen .input {
+    border-radius: 6px 0 0 6px;
+  
+  }
+  
+  .mink-gen .button {
+    border-radius: 0 4px 4px 0;
+    width: 40%;
+    font-size: 1.4rem;
+  }
+  
+  
+  
+  .mink-info {
+    margin-top: 4rem;
+    padding: 3rem;
+    font-size: 1.2rem;
+    background-color: #fff;
+    border-radius: 1.2rem;
+  }
+  
+  .mink-info p {
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
