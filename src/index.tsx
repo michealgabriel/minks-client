@@ -12,7 +12,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
 
-    <Auth0Provider domain="dev-zr84h7r2.us.auth0.com" clientId="dhWWn1S7GGyntmQL93v1LbxVkkInxqAD" redirectUri={window.location.origin} useRefreshTokens={true} cacheLocation="localstorage">
+    <Auth0Provider 
+    domain="dev-zr84h7r2.us.auth0.com" 
+    clientId="dhWWn1S7GGyntmQL93v1LbxVkkInxqAD" 
+    audience="https://dev-zr84h7r2.us.auth0.com/api/v2/" 
+    redirectUri={window.location.origin} 
+    useRefreshTokens={true} 
+    cacheLocation="localstorage">
         <BrowserRouter>
           <App />
         </BrowserRouter>

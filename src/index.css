@@ -96,3 +96,10 @@ a{
 .margin-top-lg {
   margin-top: 9.6rem;
 }
+
+.error {
+  color: red;
+  font-weight: 300;
+  font-size: 1.8rem;
+  text-align: center;
+}

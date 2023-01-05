@@ -5,3 +5,7 @@ export const authConfig = {
   clientId: 'dhWWn1S7GGyntmQL93v1LbxVkkInxqAD',          // Auth0 client id
   callbackUrl: 'http://localhost:3000/callback'
 }
+
+export const apiResource = {
+  baseurl: 'http://localhost:8000/api/links'
+}
