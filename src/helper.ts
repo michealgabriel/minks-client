@@ -1,6 +1,7 @@
 
 import toast from 'react-simple-toasts';
 import { apiResource } from './config';
+import { CreateLinkApiResponse } from './types/CreateLinkApiResponse';
 
 export const isValidUrl = (urlString: string | URL) => {
     try { 
@@ -13,10 +14,10 @@ export const isValidUrl = (urlString: string | URL) => {
 }
 
 export const generateShortLink = (length: number) => {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
@@ -27,15 +28,18 @@ export const copyField = (value: string) => {
     toast(`copy link`);
 }
 
-export const callNewLinkAPI = async (longUrl: string, linkgen: string, title: string, oaid: string) => {
-    var returnData: string = '';
+
+
+// ! ----- API REQUEST HELPERS --------------
+export const createNewLink = async (longUrl: string, linkgen: string, title: string, oaid: string) => {
+    let returnData: string | CreateLinkApiResponse = '';
     
     await fetch(`${apiResource.baseurl}/new`, {
         method: 'POST',
         body: JSON.stringify({
             target_link: longUrl,
             short_link: `minks.com/${linkgen}`,
-            title: title == '' ? linkgen : title,
+            title: title === '' ? linkgen : title,
             clicks: 0,
             owner_oaid: oaid,
         }),
@@ -45,10 +49,10 @@ export const callNewLinkAPI = async (longUrl: string, linkgen: string, title: st
     })
     .then((response) => response.json())
     .then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
         
         if(jsonData.owner_oaid === oaid) {
-            returnData = 'api-success';
+            returnData = jsonData as CreateLinkApiResponse;
         }
     })
     .catch((err) => {
@@ -58,10 +62,16 @@ export const callNewLinkAPI = async (longUrl: string, linkgen: string, title: st
     return returnData;
 }
 
-export const callGetLinksAPI = () => {
-    var returnData: string = '';
+export const updateLink = async (id: string, reqBody: {}) => {
+    let returnData: string = '';
     
-    fetch(`${apiResource.baseurl}/all`)
+    await fetch(`${apiResource.baseurl}/update/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(reqBody),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+    })
     .then((response) => response.json())
     .then((jsonData) => {
         console.log(jsonData);
@@ -73,6 +83,34 @@ export const callGetLinksAPI = () => {
         console.log('api-error');
         
     });
+    console.log(returnData);
+    
+
+    return returnData;
+}
+
+export const deleteLink = async (id: string) => {
+    let returnData: string = '';
+    
+    await fetch(`${apiResource.baseurl}/delete/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+    })
+    .then((response) => response.json())
+    .then((jsonData) => {
+        console.log(jsonData);
+        
+        returnData = 'api-success';
+    })
+    .catch((err) => {
+        returnData = 'api-error';
+        console.log('api-error');
+        
+    });
+    console.log(returnData);
+    
 
     return returnData;
 }

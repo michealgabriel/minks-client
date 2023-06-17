@@ -4,8 +4,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from 'react-router-dom';
 
 import { Wait } from '@rsuite/icons';
-import { apiResource } from '../../config';
 import * as Helper from '../../helper';
+import { CreateLinkApiResponse } from '../../types/CreateLinkApiResponse';
 
 
 function Home() {
@@ -20,7 +20,7 @@ function Home() {
     const [generatedUrlField, setGeneratedUrlField] = useState('');
 
     const [errorText, setErrorText] = useState('');
-    const [ownerId, setOwnerId] = useState('');
+    // const [ownerId, setOwnerId] = useState('');
 
     const handleLogin = async () => {
         await loginWithPopup();
@@ -29,7 +29,7 @@ function Home() {
         console.log(token?.sub);
 
         if(token?.sub !== '' && token?.sub !== undefined && token?.sub !== null) {
-            setOwnerId(token?.sub);
+            // setOwnerId(token?.sub);
             return true;
         }
 
@@ -83,13 +83,18 @@ function Home() {
         // --------- linkgen var is assigned either the optional short url field or random string generation
         shortUrlField !== '' ? linkgen = shortUrlField : linkgen = Helper.generateShortLink(5);
 
+        const token = await getIdTokenClaims();
+
         // ---------    MAKE API CALL ----------------- //
-        const apiReturn = await Helper.callNewLinkAPI(longUrlField, linkgen, '', ownerId);
+        const apiReturn: string | CreateLinkApiResponse = await Helper.createNewLink(longUrlField, linkgen, '', token?.sub);
         console.log(apiReturn);
 
-        if(apiReturn === 'api-success') {
-            setGeneratedUrlField(`minks.com/${linkgen}`);                    
-            setShowGeneration(true);
+        if(typeof apiReturn === 'object') {
+            const linkData = apiReturn as CreateLinkApiResponse
+            if(linkData._id !== null) {
+                setGeneratedUrlField(`minks.com/${linkgen}`);                    
+                setShowGeneration(true);
+            }
         }else if(apiReturn === 'api-error') {
             setErrorText('network error, try again later');                 
             setShowGeneration(false);
@@ -148,7 +153,7 @@ function Home() {
 
             <div className='mink-info'>
                 <p>Minks, a free tool to shorten a URL or reduce a link. You can create your custom shortened link or just let minks generate one for you.</p>
-                <p>Minks &copy;2022</p>
+                <p>Minks &copy;2023</p>
             </div>
 
         </div>
@@ -156,3 +161,12 @@ function Home() {
 }
 
 export default Home;
+
+function dispatch(arg0: any) {
+    throw new Error('Function not implemented.');
+}
+
+
+function addNewMink(arg0: { _id: any; title: any; date: string; short_link: any; target_link: any; clicks: any; }): any {
+    throw new Error('Function not implemented.');
+}

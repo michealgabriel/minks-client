@@ -4,10 +4,11 @@ import React, { Fragment, useState } from 'react';
 import Modal from '../Modal/Modal';
 import { IoSearch } from 'react-icons/io5';
 import { useAuth0 } from '@auth0/auth0-react';
-import toast from 'react-simple-toasts';
-import { apiResource } from '../../../config';
 import { Wait } from '@rsuite/icons';
 import * as Helper from '../../../helper';
+import { useDispatch } from 'react-redux';
+import { addNewMink } from '../../../redux/reducers/links.reducer';
+import { CreateLinkApiResponse } from '../../../types/CreateLinkApiResponse';
 
 function Navigation() {
     
@@ -24,6 +25,10 @@ function Navigation() {
     const [generatedUrlField, setGeneratedUrlField] = useState('');     
 
     const [errorText, setErrorText] = useState('');
+    
+    // create dispatch to manipulate data to Redux Store
+    const dispatch = useDispatch();
+
 
     const handleValidations = () => {
         if(longUrlField === ''){
@@ -53,7 +58,7 @@ function Navigation() {
     }
     
     const runGen = async () => {
-        var linkgen = '';
+        let linkgen = '';
 
         // --------- linkgen var is assigned either the optional short url field or random string generation
         shortUrlField !== '' ? linkgen = shortUrlField : linkgen = Helper.generateShortLink(5);
@@ -61,13 +66,24 @@ function Navigation() {
         const token = await getIdTokenClaims();
 
         // ---------    MAKE API CALL ----------------- //
-        const apiReturn = await Helper.callNewLinkAPI(longUrlField, linkgen, titleField, token?.sub);
-        console.log(apiReturn);
+        const apiReturn: string | CreateLinkApiResponse = await Helper.createNewLink(longUrlField, linkgen, titleField, token?.sub);
         
-
-        if(apiReturn === 'api-success') {
-            setGeneratedUrlField(`minks.com/${linkgen}`);                    
-            setShowGeneration(true);
+        if(typeof apiReturn === 'object') {
+            const linkData = apiReturn as CreateLinkApiResponse
+            if(linkData._id !== null) {
+                setGeneratedUrlField(`minks.com/${linkgen}`);                    
+                setShowGeneration(true);
+    
+                // update redux store
+                dispatch(addNewMink({
+                    _id: linkData._id,
+                    title: linkData.title,
+                    date: '',
+                    short_link: linkData.short_link,
+                    target_link: linkData.target_link,
+                    clicks: linkData.clicks
+                }));
+            }
         }else if(apiReturn === 'api-error') {
             setErrorText('network error, try again later');                 
             setShowGeneration(false);
